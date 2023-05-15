@@ -8,7 +8,7 @@
 import UIKit
 import MapKit
 
-class ViewController: UIViewController, CLLocationManagerDelegate, UIGestureRecognizerDelegate {
+class ViewController: UIViewController, CLLocationManagerDelegate, UIGestureRecognizerDelegate, MKMapViewDelegate {
     
     @IBOutlet weak var mapview: MKMapView!
     
@@ -60,6 +60,16 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIGestureReco
         // Добавляем метку на карту
         mapview.addAnnotation(anotation)
         // ______________ Метка на карте ______________
+        
+        // Настраиваем долгое нажатие - добавляем новые метки на карту
+        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(self.longPressAction))
+        // минимально 2 секунды
+        longPress.minimumPressDuration = 2
+        mapview.addGestureRecognizer(longPress)
+        
+        // MKMapViewDelegate - чтоб отслеживать нажатие на метки на карте (метод didSelect)
+        mapview.delegate = self
+        
     }
     // Вызывается каждый раз при изменении местоположения нашего пользователя
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -103,6 +113,27 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIGestureReco
             
             print("Map drag ended")
         }
+    }
+    
+    // Долгое нажатие на карту - добавляем новые метки
+    @objc func longPressAction(gestureRecognizer: UIGestureRecognizer) {
+        print("gestureRecognizer")
+        
+        // Получаем точку нажатия на экране
+        let touchPoint = gestureRecognizer.location(in: mapview)
+        
+        // Конвертируем точку нажатия на экране в координаты пользователя
+        let newCoor: CLLocationCoordinate2D = mapview.convert(touchPoint, toCoordinateFrom: mapview)
+        
+        // Создаем метку на карте
+        let anotation = MKPointAnnotation()
+        anotation.coordinate = newCoor
+        
+        anotation.title = "Title"
+        anotation.subtitle = "subtitle"
+        
+        mapview.addAnnotation(anotation)
+        
     }
     
 }
