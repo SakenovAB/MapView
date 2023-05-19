@@ -30,26 +30,35 @@
                                     <action selector="ShowMyLocation:" destination="BYZ-38-t0r" eventType="touchUpInside" id="zZW-5D-Qgg"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rLY-pD-nT0">
+                                <rect key="frame" x="16.000000000000004" y="99" width="41.333333333333343" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="qxf-72-HAU" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="leading" symbolic="YES" id="3Cg-1g-odX"/>
+                            <constraint firstItem="rLY-pD-nT0" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="Bg0-QQ-CdS"/>
                             <constraint firstItem="1iC-fe-GBF" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Lkf-GV-jZz"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="qxf-72-HAU" secondAttribute="bottom" constant="30" id="RxI-5F-hDp"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="1iC-fe-GBF" secondAttribute="trailing" id="cUL-pQ-NXE"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="qxf-72-HAU" secondAttribute="trailing" constant="30" id="dfW-Db-Pm9"/>
+                            <constraint firstItem="rLY-pD-nT0" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="40" id="dgn-3p-S9F"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="1iC-fe-GBF" secondAttribute="bottom" id="fYF-Bz-SHX"/>
                             <constraint firstItem="1iC-fe-GBF" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="xx3-sd-kmB"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="distanceLabel" destination="rLY-pD-nT0" id="1Kp-fG-HNs"/>
                         <outlet property="mapview" destination="1iC-fe-GBF" id="pYY-Uy-Qsd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="30" y="4"/>
+            <point key="canvasLocation" x="29.770992366412212" y="3.5211267605633805"/>
         </scene>
     </scenes>
     <resources>

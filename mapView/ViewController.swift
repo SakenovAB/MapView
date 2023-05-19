@@ -12,6 +12,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIGestureReco
     
     @IBOutlet weak var mapview: MKMapView!
     
+    @IBOutlet weak var distanceLabel: UILabel!
     let locationManager = CLLocationManager()
     
     var userLocation = CLLocation()
@@ -135,5 +136,79 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIGestureReco
         mapview.addAnnotation(anotation)
         
     }
+    // MARK: -  MapView delegate
+    // Вызывается когда нажали на метку на карте
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        
+        print(view.annotation?.title)
+        
+        // Получаем координаты метки
+        let location:CLLocation = CLLocation(latitude: (view.annotation?.coordinate.latitude)!, longitude: (view.annotation?.coordinate.longitude)!)
+        
+        // Считаем растояние до метки от нашего пользователя
+        let meters:CLLocationDistance = location.distance(from: userLocation)
+        distanceLabel.text = String(format: "Distance: %.2f m", meters)
+        
+        
+        // Routing - построение маршрута
+        // 1 Координаты начальной точки А и точки B
+        let sourceLocation = CLLocationCoordinate2D(latitude: userLocation.coordinate.latitude, longitude: userLocation.coordinate.longitude)
+        
+        let destinationLocation = CLLocationCoordinate2D(latitude: (view.annotation?.coordinate.latitude)!, longitude: (view.annotation?.coordinate.longitude)!)
+        
+        // 2 упаковка в Placemark
+        let sourcePlacemark = MKPlacemark(coordinate: sourceLocation, addressDictionary: nil)
+        let destinationPlacemark = MKPlacemark(coordinate: destinationLocation, addressDictionary: nil)
+        
+        // 3 упаковка в MapItem
+        let sourceMapItem = MKMapItem(placemark: sourcePlacemark)
+        let destinationMapItem = MKMapItem(placemark: destinationPlacemark)
+        
+        // 4 Запрос на построение маршрута
+        let directionRequest = MKDirections.Request()
+        // указываем точку А, то есть нашего пользователя
+        directionRequest.source = sourceMapItem
+        // указываем точку B, то есть метку на карте
+        directionRequest.destination = destinationMapItem
+        // выбираем на чем будем ехать - на машине
+        directionRequest.transportType = .automobile
+        
+        // Calculate the direction
+        let directions = MKDirections(request: directionRequest)
+        
+        // 5 Запускаем просчет маршрута
+        directions.calculate {
+            (response, error) -> Void in
+            
+            // Если будет ошибка с маршрутом
+            guard let response = response else {
+                if let error = error {
+                    print("Error: \(error)")
+                }
+                
+                return
+            }
+            
+            // Берем первый машрут
+            let route = response.routes[0]
+            // Рисуем на карте линию маршрута (polyline)
+            self.mapview.addOverlay((route.polyline), level: MKOverlayLevel.aboveRoads)
+            
+            // Приближаем карту с анимацией в регион всего маршрута
+            let rect = route.polyline.boundingMapRect
+            self.mapview.setRegion(MKCoordinateRegion(rect), animated: true)
+        }
+        
+    }
     
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        // Настраиваем линию
+        let renderer = MKPolylineRenderer(overlay: overlay)
+        // Цвет красный
+        renderer.strokeColor = UIColor.red
+        // Ширина линии
+        renderer.lineWidth = 4.0
+        
+        return renderer
+    }
 }
